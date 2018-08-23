@@ -28,8 +28,8 @@ RUN set -x \
  && chmod -R go+rwx /home/duplicity/ \
  && su - duplicity -c 'duplicity --version'
 
-VOLUME ["/home/duplicity/.cache/duplicity", "/home/duplicity/.gnupg"]
+#VOLUME ["/home/duplicity/.cache/duplicity", "/home/duplicity/.gnupg"]
 
-USER duplicity
+#USER duplicity
  
 CMD ["duplicity"]
