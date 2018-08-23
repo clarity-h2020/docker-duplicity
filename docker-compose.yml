@@ -1,0 +1,26 @@
+version: "3.6"
+
+services:
+  duplicity:
+    container_name: ${COMPOSE_PROJECT_NAME}
+    build:
+      context: ./latest
+    image:clarity-h2020:duplicity
+    volumes:
+      - type: volume
+        source: gnupg
+        target: /home/duplicity/.gnupg
+    - type: volume
+        source: cache
+        target: /home/duplicity/.cache/duplicity
+    
+volumes:
+  gnupg:
+    name: ${COMPOSE_PROJECT_NAME}_gnupg
+  cache:    
+    name: ${COMPOSE_PROJECT_NAME}_cache
+    
+networks:
+  default:
+    external:
+      name: ${NETWORK:-clarity}
