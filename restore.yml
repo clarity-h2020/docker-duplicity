@@ -2,9 +2,7 @@ version: '3.6'
 
 services:
   duplicity:
-    container_name: ${COMPOSE_PROJECT_NAME}-backup
-    build:
-        context: ./edge
+    container_name: ${COMPOSE_PROJECT_NAME}-restore
     image: clarity/duplicity
     environment:
         - TMPDIR=/tmp
@@ -25,13 +23,10 @@ services:
           source: ./backup
           target: /backup
         - type: bind
-          source: /docker
-          target: /data/docker
-        - type: bind
-          source: /var/lib/docker/volumes
-          target: /data/docker-volumes
-    command: duplicity --include-filelist=/home/duplicity/filelist.txt --full-if-older-than=2M --allow-source-mismatch /data file:///backup 
-    
+          source: ./restore
+          target: /data
+    command: duplicity --allow-source-mismatch restore file:///backup /data
+
 networks:
   default:
     external:

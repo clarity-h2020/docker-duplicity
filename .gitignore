@@ -8,3 +8,9 @@
 # docker
 .env
 !.env.sample
+
+#duplicity
+/duplicity_cache
+/duplicity_gnupg
+/backup
+/restore

@@ -8,7 +8,7 @@ RUN set -x \
         duplicity \
         lftp \
         openssh \
-        openssl \
+        libressl \
         py-crypto \
         py-paramiko \
         py-setuptools \
@@ -19,6 +19,8 @@ COPY Pipfile Pipfile.lock /
 
 RUN set -x \
  && apk add --no-cache py-pip \
+ && pip install --upgrade pip \
+ && pip install fasteners \
  && pip install pipenv \
  && pipenv install --system --deploy \
  && apk del --purge py-pip \
@@ -28,8 +30,8 @@ RUN set -x \
  && chmod -R go+rwx /home/duplicity/ \
  && su - duplicity -c 'duplicity --version'
 
-VOLUME ["/home/duplicity/.cache/duplicity", "/home/duplicity/.gnupg"]
+#VOLUME ["/home/duplicity/.cache/duplicity", "/home/duplicity/.gnupg"]
 
-USER duplicity
+#USER duplicity
  
 CMD ["duplicity"]
