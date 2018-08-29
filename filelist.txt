@@ -2,6 +2,8 @@
 /data/docker/000-hoster
 /data/docker/020-pgadmin4/.env
 /data/docker/100-csis
+/data/docker/350-thredds/compose.env
+/data/docker/350-thredds/tomcat-users.xml
 /data/docker/docker/400-geonode/.env
 /data/docker/docker/400-geonode/*.env
 /data/docker/docker/500-ckan/.env
@@ -9,8 +11,10 @@
 /data/docker-volumes/ckan_home
 /data/docker-volumes/ckan_pg-data
 /data/docker-volumes/ckan_storage
+/data/docker-volumes/erdapp_content
 /data/docker-volumes/geonode_dbbackups
 /data/docker-volumes/geonode_dbdata
 /data/docker-volumes/geonode_gsdata
 /data/docker-volumes/pgadmin4_data
+/data/docker-volumes/geonode_tomcat_webapps
 - **
