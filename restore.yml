@@ -25,7 +25,7 @@ services:
         - type: bind
           source: ./restore
           target: /data
-    command: duplicity --allow-source-mismatch restore file:///backup /data
+    command: duplicity --force --allow-source-mismatch restore file:///backup /data
 
 networks:
   default:
