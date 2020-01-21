@@ -1,7 +1,16 @@
 # Supported tags and respective `Dockerfile` links
 
-  * [`latest`](https://github.com/wernight/docker-duplicity/blob/master/latest/Dockerfile) [![](https://images.microbadger.com/badges/image/wernight/duplicity.svg)](https://microbadger.com/images/wernight/duplicity "Get your own image badge on microbadger.com")
-  * [`edge`](https://github.com/wernight/docker-duplicity/blob/master/edge/Dockerfile) [![](https://images.microbadger.com/badges/image/wernight/duplicity:edge.svg)](https://microbadger.com/images/wernight/duplicity "Get your own image badge on microbadger.com")
+  * [![](https://images.microbadger.com/badges/version/bludoc/duplicity.svg)](https://microbadger.com/images/bludoc/duplicity "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/bludoc/duplicity.svg)](https://microbadger.com/images/bludoc/duplicity "Get your own image badge on microbadger.com")
+  * [![](https://images.microbadger.com/badges/version/bludoc/duplicity:edge.svg)](https://microbadger.com/images/bludoc/duplicity:edge "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/bludoc/duplicity:edge.svg)](https://microbadger.com/images/bludoc/duplicity:edge "Get your own image badge on microbadger.com")
+  
+# Why this fork?
+
+This is a fork of [wernight/docker-duplicity
+](https://github.com/wernight/docker-duplicity.git) (which we call *upstream* in the
+following). We created this repo when *Duplicity* due to Python 2 deprecation moved to
+Python 3 but *upstream* did not follow yet. The according changes are
+commented in the subfolders' Dockerfiles and we changed all links in this README to
+our own version including the badges.
 
 # What is Duplicity?
 
@@ -18,7 +27,7 @@ Features of this Docker image:
 
 For the general command-line syntax, do:
 
-    $ docker run --rm wernight/duplicity duplicity --help
+    $ docker run --rm bludoc/duplicity
 
 In general you...
 
@@ -32,9 +41,10 @@ In general you...
 
 Example of commands you may want to run **periodically to back up** with good clean-up/maintenance (see below for various storage options):
 
-     $ docker run --rm ... wernight/duplicity --full-if-older-than=6M source_directory target_url
-     $ docker run --rm ... wernight/duplicity remove-older-than 6M --force target_url
-     $ docker run --rm ... wernight/duplicity cleanup --force target_url
+     $ docker run --rm ... bludoc/duplicity --full-if-older-than=6M source_directory
+      target_url
+     $ docker run --rm ... bludoc/duplicity remove-older-than 6M --force target_url
+     $ docker run --rm ... bludoc/duplicity cleanup --force target_url
 
 This would do:
 
@@ -70,7 +80,7 @@ Now you're ready to perform a **backup**:
           -v $PWD/.gnupg:/home/duplicity/.gnupg \
           -v ~/.boto:/home/duplicity/.boto:ro \
           -v /:/data:ro \
-          wernight/duplicity \
+          bludoc/duplicity \
           duplicity --full-if-older-than=6M --allow-source-mismatch /data gs://my-bucket-name/some_dir
 
 To **restore**, you'll need:
@@ -84,7 +94,7 @@ Example:
           -e PASSPHRASE=P4ssw0rd \
           -v ~/.boto:/home/duplicity/.boto:ro \
           -v /:/data:ro \
-          wernight/duplicity \
+          bludoc/duplicity \
           duplicity restore gs://my-bucket-name/some_dir /data
           
 See also the [note on Google Cloud Storage](http://duplicity.nongnu.org/duplicity.1.html#sect15).
@@ -101,7 +111,7 @@ See also the [note on Google Cloud Storage](http://duplicity.nongnu.org/duplicit
 
         $ docker run --rm -i --user $UID \
               -v $PWD/pydriveprivatekey.p12:/pydriveprivatekey.p12:ro \
-              wernight/duplicity \
+              bludoc/duplicity \
               openssl pkcs12 -in /pydriveprivatekey.p12 -nodes -nocerts >pydriveprivatekey.pem
         Enter Import Password: notasecret
 
@@ -113,7 +123,7 @@ Now you're ready to perform a **backup**:
           -v $PWD/.cache:/home/duplicity/.cache/duplicity \
           -v $PWD/.gnupg:/home/duplicity/.gnupg \
           -v /:/data:ro \
-          wernight/duplicity \
+          bludoc/duplicity \
           duplicity --full-if-older-than=6M --allow-source-mismatch /data pydrive://duplicity@developer.gserviceaccount.com/some_dir
 
 To **restore**, you'll need:
@@ -132,7 +142,7 @@ Supposing you've an **SSH** access to some machine, you can:
           -v ~/.ssh/id_rsa:/id_rsa:ro \
           -v ~/.ssh/known_hosts:/etc/ssh/ssh_known_hosts:ro \
           -v /:/data:ro \
-          wernight/duplicity \
+          bludoc/duplicity \
           duplicity --full-if-older-than=6M --allow-source-mismatch \
           --rsync-options='-e "ssh -i /id_rsa"' \
           /data rsync://user@example.com/some_dir
@@ -147,7 +157,7 @@ the "No user exists for uid" check, please let me know.
 
 Here is a simple alias that should work in most cases:
 
-    $ alias duplicity='docker run --rm --user=root -v ~/.ssh/id_rsa:/home/duplicity/.ssh/id_rsa:ro -v ~/.boto:/home/duplicity/.boto:ro -v ~/.gnupg:/home/duplicity/.gnupg -v /:/mnt:ro -e PASSPHRASE=$PASSPHRASE wernight/duplicity duplicity $@'
+    $ alias duplicity='docker run --rm --user=root -v ~/.ssh/id_rsa:/home/duplicity/.ssh/id_rsa:ro -v ~/.boto:/home/duplicity/.boto:ro -v ~/.gnupg:/home/duplicity/.gnupg -v /:/mnt:ro -e PASSPHRASE=$PASSPHRASE bludoc/duplicity duplicity $@'
 
 Now you should be able to run duplicity almost as if it were installed, example:
 
@@ -161,6 +171,7 @@ Now you should be able to run duplicity almost as if it were installed, example:
   * [How To Use Duplicity with GPG to Securely Automate Backups on Ubuntu | DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-use-duplicity-with-gpg-to-securely-automate-backups-on-ubuntu)
 
 
-## Feedbacks
+## Feedback
 
-Report issues/questions/feature requests on [GitHub Issues](https://github.com/wernight/docker-duplicity/issues).
+Report issues/questions/feature requests on *upstream*'s [GitHub Issues
+](https://github.com/wernight/docker-duplicity/issues).
