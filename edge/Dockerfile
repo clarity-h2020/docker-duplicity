@@ -10,6 +10,7 @@ FROM alpine:edge
 # *   Removal of unneeded installation of python dependencies,
 # *   Updating the according Pipfile and Pipfile.lock,
 # *   Creating a symlink from */usr/bin/python3* to */usr/bin/python*,
+# *   Replacing the manual *.gnupg* folder creation by GPG inherent initialization,
 #
 # Copyright 2020 Werner Beroux, Björn Ludwig
 
@@ -36,7 +37,8 @@ RUN set -x \
  && ln -s /usr/bin/python3 /usr/bin/python \
  && adduser -D -u 1896 duplicity \
  && mkdir -p /home/duplicity/.cache/duplicity \
- && mkdir -p /home/duplicity/.gnupg \
+ # Ensure the *.gnupg* folder exists.
+ && gpg --list-keys \
  && chmod -R go+rwx /home/duplicity/ \
  && su - duplicity -c 'duplicity --version'
 
