@@ -11,6 +11,8 @@ FROM alpine:latest
 # *   Updating the according Pipfile and Pipfile.lock,
 # *   Creating a symlink from */usr/bin/python3* to */usr/bin/python*,
 # *   Replacing the manual *.gnupg* folder creation by GPG inherent initialization,
+# *   Introducing an entrypoint to allow for easier duplicity execution,
+# *   Changing the command according to the new entrypoint.
 #
 # Copyright 2020 Werner Beroux, Björn Ludwig
 
@@ -45,5 +47,7 @@ RUN set -x \
 VOLUME ["/home/duplicity/.cache/duplicity", "/home/duplicity/.gnupg"]
 
 USER duplicity
- 
-CMD ["duplicity"]
+
+ENTRYPOINT ["duplicity"]
+
+CMD ["--help"]
