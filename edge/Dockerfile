@@ -23,7 +23,8 @@ RUN set -x \
  && ln -s /usr/bin/python3 /usr/bin/python \
  && adduser -D -u 1896 duplicity \
  && mkdir -p /home/duplicity/.cache/duplicity \
- && mkdir -p /home/duplicity/.gnupg \
+ # Ensure the .gnupg folder exists.
+ && gpg --list-keys \
  && chmod -R go+rwx /home/duplicity/ \
  && su - duplicity -c 'duplicity --version'
 
