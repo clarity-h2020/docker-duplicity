@@ -9,9 +9,6 @@ RUN set -x \
         lftp \
         openssh \
         openssl \
-        py-crypto \
-        py-paramiko \
-        py-setuptools \
         rsync \
  && update-ca-certificates
 
