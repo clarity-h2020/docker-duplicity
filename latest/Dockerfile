@@ -1,5 +1,18 @@
 FROM alpine:latest
 
+# This work is based on 'https://github.com/wernight/docker-duplicity' and was modified
+# by:
+#
+# *   Björn Ludwig
+#
+# The modifications include:
+#
+# *   Removal of unneeded installation of python dependencies,
+# *   Updating the according Pipfile and Pipfile.lock,
+# *   Creating a symlink from */usr/bin/python3* to */usr/bin/python*,
+#
+# Copyright 2020 Werner Beroux, Björn Ludwig
+
 ENV HOME=/home/duplicity
 
 RUN set -x \
@@ -19,7 +32,7 @@ RUN set -x \
  && pip3 install pipenv \
  && pipenv install --system --deploy \
  && apk del --purge py3-pip \
- # Ensure python is callable via '/usr/bin/python'.
+ # Ensure Python is callable via */usr/bin/python*.
  && ln -s /usr/bin/python3 /usr/bin/python \
  && adduser -D -u 1896 duplicity \
  && mkdir -p /home/duplicity/.cache/duplicity \
