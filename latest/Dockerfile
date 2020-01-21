@@ -30,5 +30,7 @@ RUN set -x \
 VOLUME ["/home/duplicity/.cache/duplicity", "/home/duplicity/.gnupg"]
 
 USER duplicity
- 
-CMD ["duplicity"]
+
+ENTRYPOINT ["duplicity"]
+
+CMD ["--help"]
