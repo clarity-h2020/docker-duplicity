@@ -1,5 +1,17 @@
 FROM alpine:latest
 
+# This work is based on 'https://github.com/wernight/docker-duplicity' and was modified
+# by:
+#
+# *   Björn Ludwig
+#
+# The modifications include:
+#
+# *   Introducing an entrypoint to allow for easier duplicity execution,
+# *   Changing the command according to the new entrypoint.
+#
+# Copyright 2020 Werner Beroux, Björn Ludwig
+
 ENV HOME=/home/duplicity
 
 RUN set -x \
