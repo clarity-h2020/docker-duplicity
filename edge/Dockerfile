@@ -1,5 +1,16 @@
 FROM alpine:edge
 
+# This work is based on 'https://github.com/wernight/docker-duplicity' and was modified
+# by:
+#
+# *   Björn Ludwig
+#
+# The modifications include:
+#
+# *   Replacing the manual *.gnupg* folder creation by GPG inherent initialization,
+#
+# Copyright 2020 Werner Beroux, Björn Ludwig
+
 ENV HOME=/home/duplicity
 
 RUN set -x \
@@ -23,7 +34,7 @@ RUN set -x \
  && ln -s /usr/bin/python3 /usr/bin/python \
  && adduser -D -u 1896 duplicity \
  && mkdir -p /home/duplicity/.cache/duplicity \
- # Ensure the .gnupg folder exists.
+ # Ensure the *.gnupg* folder exists.
  && gpg --list-keys \
  && chmod -R go+rwx /home/duplicity/ \
  && su - duplicity -c 'duplicity --version'
