@@ -46,7 +46,7 @@ RUN set -x \
 
 #VOLUME ["/home/duplicity/.cache/duplicity", "/home/duplicity/.gnupg"]
 
-USER duplicity
+#USER duplicity
 
 ENTRYPOINT ["duplicity"]
 
