@@ -4,7 +4,7 @@ services:
   duplicity:
     container_name: ${COMPOSE_PROJECT_NAME}-backup
     build:
-        context: ./edge
+        context: ./latest
     image: clarity/duplicity
     environment:
         - TMPDIR=/tmp
@@ -12,11 +12,11 @@ services:
     volumes:
         - type: tmpfs
           target: /tmp
-        - type: bind
-          source: ./duplicity_gnupg
+        - type: volume
+          source: gnupg
           target: /home/duplicity/.gnupg
-        - type: bind
-          source: ./duplicity_cache
+        - type: volume
+          source: cache
           target: /home/duplicity/.cache/duplicity
         - type: bind
           source: ./filelist.txt
@@ -30,9 +30,14 @@ services:
         - type: bind
           source: /var/lib/docker/volumes
           target: /data/docker-volumes
-    command: duplicity --include-filelist=/home/duplicity/filelist.txt --full-if-older-than=2M --allow-source-mismatch /data file:///backup 
-    
+    command: -v4 --include-filelist=/home/duplicity/filelist.txt --full-if-older-than=2M --allow-source-mismatch /data file:///backup 
+volumes:
+  gnupg:
+    name: ${COMPOSE_PROJECT_NAME}_gnupg
+  cache:    
+    name: ${COMPOSE_PROJECT_NAME}_cache  
 networks:
   default:
     external:
       name: ${NETWORK:-clarity}
+      

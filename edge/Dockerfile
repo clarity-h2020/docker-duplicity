@@ -37,14 +37,14 @@ RUN set -x \
  && apk del --purge py3-pip \
  # Ensure Python is callable via */usr/bin/python*.
  && ln -s /usr/bin/python3 /usr/bin/python \
- && adduser -D -u 1896 duplicity \
+ && adduser -D -u 1896 -G 999 duplicity \
  && mkdir -p /home/duplicity/.cache/duplicity \
  # Ensure the *.gnupg* folder exists.
  && gpg --list-keys \
  && chmod -R go+rwx /home/duplicity/ \
  && su - duplicity -c 'duplicity --version'
 
-VOLUME ["/home/duplicity/.cache/duplicity", "/home/duplicity/.gnupg"]
+#VOLUME ["/home/duplicity/.cache/duplicity", "/home/duplicity/.gnupg"]
 
 USER duplicity
 
