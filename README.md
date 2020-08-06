@@ -1,18 +1,120 @@
-# Supported tags and respective `Dockerfile` links
+# CLARITY docker-duplicity 
 
-  * [![](https://images.microbadger.com/badges/version/bludoc/duplicity.svg)](https://microbadger.com/images/bludoc/duplicity "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/bludoc/duplicity.svg)](https://microbadger.com/images/bludoc/duplicity "Get your own image badge on microbadger.com")
-  * [![](https://images.microbadger.com/badges/version/bludoc/duplicity:edge.svg)](https://microbadger.com/images/bludoc/duplicity:edge "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/bludoc/duplicity:edge.svg)](https://microbadger.com/images/bludoc/duplicity:edge "Get your own image badge on microbadger.com")
-  
-# Why this fork?
+## Description
 
-This is a fork of [wernight/docker-duplicity
-](https://github.com/wernight/docker-duplicity.git) (which we call *upstream* in the
-following). We created this repo when *Duplicity* due to Python 2 deprecation moved to
-Python 3 but *upstream* did not follow yet. The according changes are
-commented in the subfolders' Dockerfiles and we changed all links in this README to
-our own version including the badges.
+[duplicity](http://duplicity.nongnu.org/) is backup tool that is used by [CLARITY](https://clarity-h2020.eu/)'s Climate Services Information System ([CSIS](https://github.com/clarity-h2020/csis/)) on [CSIS Development System](https://github.com/clarity-h2020/csis#csis-development-system) and [CSIS Production System](https://github.com/clarity-h2020/csis#csis-production-system) virtual servers to perform incremental backups. 
 
-# What is Duplicity?
+## Implementation 
+
+This is a fork of [wernight/docker-duplicity](https://github.com/wernight/docker-duplicity.git) (which we call *upstream* in the
+following). We created this repo when *Duplicity* due to Python 2 deprecation moved to Python 3 but *upstream* did not follow yet. The according changes are commented in the subfolders' Dockerfiles and we changed all links in this README to our own version.
+
+## Deployment
+
+duplicity is available at `/docker/999-duplicity` on both the development and production server. It is not deployed directly as docker container, so it does not run in the background. It is intended to be started **on demand** to manually create [additional](https://github.com/clarity-h2020/docker-drupal/#backups) incremental backups before important changes to the system are made. 
+
+### Configuration
+
+#### docker-compose
+
+The on-demand duplicity container is  managed via the customised [docker-compose.yml](https://github.com/clarity-h2020/docker-duplicity/blob/csis.ait.ac.at/docker-compose.yml). The actual configuration is maintained in an `.env` while [.env.sample](https://github.com/clarity-h2020/docker-duplicity/blob/csis.ait.ac.at/.env.sample) can be used as blueprint of this configuration file. Variables in this file will be substituted into [docker-compose.yml](https://github.com/clarity-h2020/docker-duplicity/blob/csis.ait.ac.at/docker-compose.yml) and [restore.yml](https://github.com/clarity-h2020/docker-duplicity/blob/csis.ait.ac.at/restore.yml). 
+
+#### backed-up directories
+
+Two separate backup configurations, [one](https://github.com/clarity-h2020/docker-duplicity/tree/csis-dev.ait.ac.at) for the development system and [another one](https://github.com/clarity-h2020/docker-duplicity/tree/csis.ait.ac.at) for the production system are maintained in two separate branches. The actual configuration consist of the `filelist.txt` file, that specifies which directories are backed-up by duplicity. 
+
+The [filelist.txt](https://github.com/clarity-h2020/docker-duplicity/blob/csis-dev.ait.ac.at/filelist.txt) for [csis-dev.ait.ac.at](https://github.com/clarity-h2020/docker-duplicity/tree/csis-dev.ait.ac.at) looks for example like:
+
+```txt
+/data/docker/010-ngnix-proxy
+/data/docker/000-hoster
+/data/docker/020-pgadmin4/.env
+/data/docker/100-csis
+/data/docker/400-geonode/.env
+/data/docker/400-geonode/*.env
+/data/docker/500-ckan/.env
+/data/docker/600-geoserver
+/data/docker-volumes/ckan_config
+/data/docker-volumes/ckan_home
+/data/docker-volumes/ckan_pg-data
+/data/docker-volumes/ckan_storage
+/data/docker-volumes/pgadmin4_data
+- **
+```
+
+Don't get confused by `/data` as it refers to the directory structure **inside of** the duplicity container. Refer to the **bind-mount** [volume declaration](https://github.com/clarity-h2020/docker-duplicity/blob/csis-dev.ait.ac.at/docker-compose.yml#L27) configuration in [docker-compose.yml](https://github.com/clarity-h2020/docker-duplicity/blob/csis-dev.ait.ac.at/docker-compose.yml#L27) to see how this maps to the host file system:
+
+```yaml
+services:
+  duplicity
+    volumes:
+        - type: bind
+          source: /docker
+          target: /data/docker
+        - type: bind
+          source: /var/lib/docker/volumes
+          target: /data/docker-volumes
+```
+
+## Usage
+
+### Backup
+
+Before creating the backup, it is advisable to stop any database containers to avoid database corruption in case of locked database files. For the CSIS containers ([docker-drupal](https://github.com/clarity-h2020/docker-drupal/issues)) this can .e.g done with:
+
+```sh
+cd /docker/100-csis
+docker-compose stop
+```
+
+Creating an incremental backup is straightforward:
+
+```sh
+cd /docker/999-duplicity/
+sudo docker-compose up
+```
+
+The typical output should look like:
+
+> Starting duplicity-backup ... done 
+> Attaching to duplicity-backup
+> duplicity-backup | gpg: WARNING: unsafe permissions on homedir '/home/duplicity/.gnupg' 
+> duplicity-backup | Reading globbing filelist /home/duplicity/filelist.txt
+> duplicity-backup | Local and Remote metadata are synchronized, no sync needed. 
+> duplicity-backup | Last full backup date: Thu Jul  2 07:26:11 2020 
+> duplicity-backup | --------------[ Backup Statistics ]-------------- 
+> duplicity-backup | StartTime 1596721659.90 (Thu Aug  6 13:47:39 2020) 
+> duplicity-backup | EndTime 1596721819.03 (Thu Aug  6 13:50:19 2020) 
+> duplicity-backup | ElapsedTime 159.13 (2 minutes 39.13 seconds) 
+> duplicity-backup | SourceFiles 241798 
+> duplicity-backup | SourceFileSize 7280718561 (6.78 GB) 
+> duplicity-backup | NewFiles 6077 
+> duplicity-backup | NewFileSize 326757996 (312 MB) 
+> duplicity-backup | DeletedFiles 907 
+> duplicity-backup | ChangedFiles 808
+> duplicity-backup | ChangedFileSize 201415072 (192 MB) 
+> duplicity-backup | ChangedDeltaSize 0 (0 bytes)
+> duplicity-backup | DeltaEntries 7792
+> duplicity-backup | RawDeltaSize 357169539 (341 MB)
+> duplicity-backup | TotalDestinationSizeChange 242665597 (231 MB)
+> duplicity-backup | Errors 0
+> duplicity-backup | -------------------------------------------------
+> duplicity-backup |
+> duplicity-backup exited with code 0
+
+### Restore
+
+**The latest** backup-set can be easily restored with with 
+
+```sh
+cd /docker/999-duplicity/
+docker-compose up -f restore.yml
+``` 
+The restored directories can then be found in the `/docker/999-duplicity/restore` directory. For other restore options please refer to the [duplicity documentation](http://duplicity.nongnu.org/docs.html).
+
+# About wernight/docker-duplicity
+
+## What is Duplicity?
 
 **[duplicity](http://duplicity.nongnu.org/)** backup tool.
 
