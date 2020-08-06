@@ -30,10 +30,7 @@ The [filelist.txt](https://github.com/clarity-h2020/docker-duplicity/blob/csis-d
 /data/docker/000-hoster
 /data/docker/020-pgadmin4/.env
 /data/docker/100-csis
-/data/docker/400-geonode/.env
-/data/docker/400-geonode/*.env
 /data/docker/500-ckan/.env
-/data/docker/600-geoserver
 /data/docker-volumes/ckan_config
 /data/docker-volumes/ckan_home
 /data/docker-volumes/ckan_pg-data
@@ -60,7 +57,7 @@ services:
 
 ### Backup
 
-Before creating the backup, it is advisable to stop any database containers to avoid database corruption in case of locked database files. For the CSIS containers ([docker-drupal](https://github.com/clarity-h2020/docker-drupal/issues)) this can .e.g done with:
+Before creating the backup, it is advisable to stop any database containers to avoid database corruption in case of locked database files. For the CSIS containers ([docker-drupal](https://github.com/clarity-h2020/docker-drupal/issues)) this can e.g. done with:
 
 ```sh
 cd /docker/100-csis
@@ -76,35 +73,35 @@ sudo docker-compose up
 
 The typical output should look like:
 
-> Starting duplicity-backup ... done 
-> Attaching to duplicity-backup
-> duplicity-backup | gpg: WARNING: unsafe permissions on homedir '/home/duplicity/.gnupg' 
-> duplicity-backup | Reading globbing filelist /home/duplicity/filelist.txt
-> duplicity-backup | Local and Remote metadata are synchronized, no sync needed. 
-> duplicity-backup | Last full backup date: Thu Jul  2 07:26:11 2020 
-> duplicity-backup | --------------[ Backup Statistics ]-------------- 
-> duplicity-backup | StartTime 1596721659.90 (Thu Aug  6 13:47:39 2020) 
-> duplicity-backup | EndTime 1596721819.03 (Thu Aug  6 13:50:19 2020) 
-> duplicity-backup | ElapsedTime 159.13 (2 minutes 39.13 seconds) 
-> duplicity-backup | SourceFiles 241798 
-> duplicity-backup | SourceFileSize 7280718561 (6.78 GB) 
-> duplicity-backup | NewFiles 6077 
-> duplicity-backup | NewFileSize 326757996 (312 MB) 
-> duplicity-backup | DeletedFiles 907 
-> duplicity-backup | ChangedFiles 808
-> duplicity-backup | ChangedFileSize 201415072 (192 MB) 
-> duplicity-backup | ChangedDeltaSize 0 (0 bytes)
-> duplicity-backup | DeltaEntries 7792
-> duplicity-backup | RawDeltaSize 357169539 (341 MB)
-> duplicity-backup | TotalDestinationSizeChange 242665597 (231 MB)
-> duplicity-backup | Errors 0
-> duplicity-backup | -------------------------------------------------
-> duplicity-backup |
-> duplicity-backup exited with code 0
+> Starting duplicity-backup ... done \
+> Attaching to duplicity-backup \
+> duplicity-backup | gpg: WARNING: unsafe permissions on homedir '/home/duplicity/.gnupg'  \
+> duplicity-backup | Reading globbing filelist /home/duplicity/filelist.txt \
+> duplicity-backup | Local and Remote metadata are synchronized, no sync needed.  \
+> duplicity-backup | Last full backup date: Thu Jul  2 07:26:11 2020  \
+> duplicity-backup | --------------[ Backup Statistics ]--------------  \
+> duplicity-backup | StartTime 1596721659.90 (Thu Aug  6 13:47:39 2020)  \
+> duplicity-backup | EndTime 1596721819.03 (Thu Aug  6 13:50:19 2020)  \
+> duplicity-backup | ElapsedTime 159.13 (2 minutes 39.13 seconds)  \
+> duplicity-backup | SourceFiles 241798  \
+> duplicity-backup | SourceFileSize 728071 8561 (6.78 GB)  \
+> duplicity-backup | NewFiles 6077  \
+> duplicity-backup | NewFileSize 326757996 (312 MB)  \
+> duplicity-backup | DeletedFiles 907  \
+> duplicity-backup | ChangedFiles 808 \
+> duplicity-backup | ChangedFileSize 201415072 (192 MB)  \
+> duplicity-backup | ChangedDeltaSize 0 (0 bytes) \
+> duplicity-backup | DeltaEntries 7792 \
+> duplicity-backup | RawDeltaSize 357169539 (341 MB) \
+> duplicity-backup | TotalDestinationSizeChange 242665597 (231 MB) \
+> duplicity-backup | Errors 0 \
+> duplicity-backup | ------------------------------------------------- \
+> duplicity-backup | \
+> duplicity-backup exited with code 0 \
 
 ### Restore
 
-**The latest** backup-set can be easily restored with with 
+**The latest** backup-set can be easily restored with help of the [restore.yml](https://github.com/clarity-h2020/docker-duplicity/blob/csis.ait.ac.at/restore.yml) compose file which used the duplicity restore options `-v6 --force --allow-source-mismatch restore file:///backup /data`:
 
 ```sh
 cd /docker/999-duplicity/
@@ -112,7 +109,7 @@ docker-compose up -f restore.yml
 ``` 
 The restored directories can then be found in the `/docker/999-duplicity/restore` directory. For other restore options please refer to the [duplicity documentation](http://duplicity.nongnu.org/docs.html).
 
-# About wernight/docker-duplicity
+# About [wernight/docker-duplicity](https://github.com/wernight/docker-duplicity.git)
 
 ## What is Duplicity?
 
