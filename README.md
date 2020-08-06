@@ -57,7 +57,7 @@ services:
 
 ### Backup
 
-Before creating the backup, it is advisable to stop any database containers to avoid database corruption in case of locked database files. For the CSIS containers ([docker-drupal](https://github.com/clarity-h2020/docker-drupal/issues)) this can e.g. done with:
+Before creating the backup, it is advisable to stop any database containers to avoid database corruption in case of locked database files. For the CSIS containers ([docker-drupal](https://github.com/clarity-h2020/docker-drupal/issues)) this can e.g. be done with:
 
 ```sh
 cd /docker/100-csis
