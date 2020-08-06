@@ -2,10 +2,7 @@
 /data/docker/000-hoster
 /data/docker/020-pgadmin4/.env
 /data/docker/100-csis
-/data/docker/400-geonode/.env
-/data/docker/400-geonode/*.env
 /data/docker/500-ckan/.env
-/data/docker/600-geoserver
 /data/docker-volumes/ckan_config
 /data/docker-volumes/ckan_home
 /data/docker-volumes/ckan_pg-data
